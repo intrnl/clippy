@@ -1,0 +1,44 @@
+{
+	"name": "@intrnl/clippy",
+	"version": "0.1.3",
+	"license": "MIT",
+	"sideEffects": false,
+	"files": ["dist/"],
+	"main": "./dist/clippy.js",
+	"exports": {
+		"require": "./dist/clippy.js",
+		"import": "./dist/clippy.mjs"
+	},
+	"scripts": {
+		"prepublishOnly": "npm run bundle",
+		"bundle": "wireit",
+		"build": "wireit"
+	},
+	"wireit": {
+		"bundle": {
+			"command": "rollup -c",
+			"dependencies": ["build"],
+			"files": ["rollup.config.js"],
+			"output": ["dist/**"]
+		},
+		"build": {
+			"command": "tsc --build",
+			"clean": "if-file-deleted",
+			"files": ["src/**/*.ts", "tsconfig.json"],
+			"output": ["lib/**"]
+		}
+	},
+	"dependencies": {
+		"typanion": "^3.3.1"
+	},
+	"peerDependencies": {
+		"typanion": "*"
+	},
+	"devDependencies": {
+		"rollup": "^2.70.2",
+		"rollup-plugin-dts": "^4.2.1",
+		"tslib": "^2.4.0",
+		"typescript": "^4.6.3",
+		"wireit": "^0.2.0"
+	}
+}
