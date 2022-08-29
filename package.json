@@ -12,7 +12,7 @@
 		"import": "./dist/clippy.mjs"
 	},
 	"scripts": {
-		"prepublishOnly": "npm run bundle",
+		"prepublishOnly": "pnpm run bundle",
 		"bundle": "wireit",
 		"build": "wireit"
 	},
