@@ -82,7 +82,7 @@ export type MiniCli<Context extends BaseContext> = CliOptions & {
 	 * @param error The error to format. If `error.name` is `'Error'`, it is replaced with `'Internal Error'`.
 	 * @param opts.command The command whose usage will be included in the formatted error.
 	 */
-	error(error: Error, opts?: { command?: Command<Context> | null }): string;
+	error(error: Error, opts?: { command?: Command<Context> | null }): string | null;
 
 	/**
 	 * Returns a rich color format if colors are enabled, or a plain text format otherwise.
@@ -404,7 +404,12 @@ export class Cli<Context extends BaseContext = BaseContext>
 			try {
 				command = this.process(input, context);
 			} catch (error) {
-				context.console.error(this.error(error, { colored }));
+				const message = this.error(error, { colored });
+
+				if (message) {
+					context.console.error(message);
+				}
+
 				return 1;
 			}
 		}
@@ -664,7 +669,10 @@ export class Cli<Context extends BaseContext = BaseContext>
 		return result;
 	}
 
-	error (error: Error | any, { colored, command = error[errorCommandSymbol] ?? null }: { colored?: boolean; command?: Command<Context> | null } = {}) {
+	error (
+		error: Error | any,
+		{ colored, command = error[errorCommandSymbol] ?? null }: { colored?: boolean; command?: Command<Context> | null } = {}
+	): string | null {
 		if (!(error instanceof Error)) {
 			error = new Error(`Execution failed with a non-error rejection (rejected value: ${JSON.stringify(error)})`);
 		}
